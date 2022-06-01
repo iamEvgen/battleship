@@ -1,6 +1,6 @@
 class Ship {
-  constructor(length, coordinates) {
-    this.length = length;
+  constructor(coordinates) {
+    this.length = coordinates.length;
     this.cells = [];
     coordinates.forEach((cell) => {
       this.cells.push({
@@ -13,7 +13,8 @@ class Ship {
   hit(hitCoordinates) {
     let thereIsAHit = false;
     this.cells.forEach((cell) => {
-      if (cell.cellCoordinates === hitCoordinates) {
+      if (cell.cellCoordinates[0] === hitCoordinates[0]
+        && cell.cellCoordinates[1] === hitCoordinates[1]) {
         // eslint-disable-next-line no-param-reassign
         cell.cellIsHit = true;
         thereIsAHit = true;
