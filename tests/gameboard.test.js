@@ -87,6 +87,7 @@ test('hit the target #10', () => {
   expect(myGameboard.receiveAttack([1, 1])).toEqual(
     {
       hitStatus: true,
+      shipWasSunk: false,
       gameOverStatus: false,
       field: [
         ['', '', '', '', '', '', '', '', '', ''],
@@ -108,6 +109,7 @@ test('hit the target #11', () => {
   expect(myGameboard.receiveAttack([1, 1])).toEqual(
     {
       hitStatus: 'error',
+      shipWasSunk: false,
       gameOverStatus: false,
       field: [
         ['', '', '', '', '', '', '', '', '', ''],
@@ -129,6 +131,7 @@ test('hit the target #12', () => {
   expect(myGameboard.receiveAttack([0, 0])).toEqual(
     {
       hitStatus: false,
+      shipWasSunk: false,
       gameOverStatus: false,
       field: [
         ['m', '', '', '', '', '', '', '', '', ''],
@@ -150,6 +153,7 @@ test('hit the target #13', () => {
   expect(myGameboard.receiveAttack([0, 0])).toEqual(
     {
       hitStatus: 'error',
+      shipWasSunk: false,
       gameOverStatus: false,
       field: [
         ['m', '', '', '', '', '', '', '', '', ''],
@@ -171,6 +175,7 @@ test('hit the target #14', () => {
   expect(myGameboard.receiveAttack([1, 2])).toEqual(
     {
       hitStatus: true,
+      shipWasSunk: false,
       gameOverStatus: false,
       field: [
         ['m', '', '', '', '', '', '', '', '', ''],
@@ -192,6 +197,7 @@ test('hit the target #15', () => {
   expect(myGameboard.receiveAttack([0, 2])).toEqual(
     {
       hitStatus: false,
+      shipWasSunk: false,
       gameOverStatus: false,
       field: [
         ['m', '', 'm', '', '', '', '', '', '', ''],
@@ -213,6 +219,7 @@ test('hit the target #16', () => {
   expect(myGameboard.receiveAttack([1, 3])).toEqual(
     {
       hitStatus: true,
+      shipWasSunk: true,
       gameOverStatus: false,
       field: [
         ['m', '', 'm', '', '', '', '', '', '', ''],
@@ -234,6 +241,7 @@ test('hit the target #17', () => {
   expect(myGameboard.receiveAttack([3, 0])).toEqual(
     {
       hitStatus: true,
+      shipWasSunk: false,
       gameOverStatus: false,
       field: [
         ['m', '', 'm', '', '', '', '', '', '', ''],
@@ -257,6 +265,7 @@ test('hit the target #18', () => {
   expect(myGameboard.receiveAttack([6, 0])).toEqual(
     {
       hitStatus: true,
+      shipWasSunk: true,
       gameOverStatus: false,
       field: [
         ['m', '', 'm', '', '', '', '', '', '', ''],
@@ -278,6 +287,7 @@ test('hit the target #19', () => {
   expect(myGameboard.receiveAttack([7, 0])).toEqual(
     {
       hitStatus: false,
+      shipWasSunk: false,
       gameOverStatus: false,
       field: [
         ['m', '', 'm', '', '', '', '', '', '', ''],
@@ -299,6 +309,7 @@ test('hit the target #19', () => {
   expect(myGameboard.receiveAttack([9, 9])).toEqual(
     {
       hitStatus: true,
+      shipWasSunk: true,
       gameOverStatus: false,
       field: [
         ['m', '', 'm', '', '', '', '', '', '', ''],
@@ -322,6 +333,7 @@ test('hit the target #20', () => {
   expect(myGameboard.receiveAttack([7, 9])).toEqual(
     {
       hitStatus: true,
+      shipWasSunk: true,
       gameOverStatus: true,
       field: [
         ['m', '', 'm', '', '', '', '', '', '', ''],

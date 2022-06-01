@@ -111,6 +111,7 @@ class Gameboard {
   receiveAttack(targetCellCoordinates) {
     const resultOfAttack = {
       hitStatus: null,
+      shipWasSunk: null,
       gameOverStatus: null,
       field: this.field,
     };
@@ -120,19 +121,26 @@ class Gameboard {
     if (this.field[targetLine][targetColumn] === 's') {
       // hit the target
       this.field[targetLine][targetColumn] = 'h';
-      this.ships.forEach((ship) => ship.hit(targetCellCoordinates));
+      let shipIsSunk;
+      this.ships.forEach((ship) => {
+        const thereIsAHit = ship.hit(targetCellCoordinates);
+        if (thereIsAHit) shipIsSunk = ship.isSunk();
+      });
       resultOfAttack.hitStatus = true;
+      resultOfAttack.shipWasSunk = shipIsSunk;
       resultOfAttack.gameOverStatus = this.getGameOverStatus();
       resultOfAttack.field = this.field;
     } else if (this.field[targetLine][targetColumn] === '') {
       // missed the target
       this.field[targetLine][targetColumn] = 'm';
       resultOfAttack.hitStatus = false;
+      resultOfAttack.shipWasSunk = false;
       resultOfAttack.gameOverStatus = this.getGameOverStatus();
       resultOfAttack.field = this.field;
     } else if (['h', 'm'].includes(this.field[targetLine][targetColumn])) {
       // repeated shot at the same target
       resultOfAttack.hitStatus = 'error';
+      resultOfAttack.shipWasSunk = false;
       resultOfAttack.gameOverStatus = this.getGameOverStatus();
       resultOfAttack.field = this.field;
     } else {
