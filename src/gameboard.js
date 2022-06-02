@@ -32,10 +32,10 @@ class Gameboard {
           const testLine = line + i;
           const testColumn = column + j;
           if (
-            testLine >= 0
-            && testLine <= 9
-            && testColumn >= 0
-            && testColumn <= 9
+            testLine >= 0 &&
+            testLine <= 9 &&
+            testColumn >= 0 &&
+            testColumn <= 9
           ) {
             if (this.field[testLine][testColumn] !== '') {
               nearCellsAreFree = false;
@@ -77,8 +77,8 @@ class Gameboard {
         ]);
       }
     } else if (
-      axis === 'vertical'
-      && firstCellCoordinates.line + length <= 10
+      axis === 'vertical' &&
+      firstCellCoordinates.line + length <= 10
     ) {
       for (let i = 1; i < length; i += 1) {
         allShipCoordinates.push([
@@ -148,6 +148,24 @@ class Gameboard {
     }
 
     return resultOfAttack;
+  }
+
+  generateShips() {
+    for (let shipLength of [4, 3, 3, 2, 2, 2, 1, 1, 1, 1]) {
+      let counter = 1;
+      while (counter < 1000) {
+        const firstCell = [
+          Math.floor(Math.random() * 10),
+          Math.floor(Math.random() * 10),
+        ];
+        const axis = ['horizontal', 'vertical'][Math.floor(Math.random() * 2)];
+        const shipAdded = this.addShip(firstCell, shipLength, axis);
+        if (shipAdded) {
+          break;
+        }
+        counter += 1;
+      }
+    }
   }
 }
 

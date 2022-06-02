@@ -1,10 +1,9 @@
+/* eslint-disable no-constant-condition */
 class Player {
-  constructor(mode) {
+  constructor(mode, name) {
+    this.name = name;
     this.mode = mode; // 'player'/'pc'
-    this.successShots = [
-      [2, 2],
-      [2, 3],
-    ]; // add here success shots before sunk ex. [1, 2];
+    this.successShots = []; // add here success shots before sunk ex. [1, 2];
   }
 
   addSuccessShot(coordinates) {
@@ -15,21 +14,20 @@ class Player {
     this.successShots = [];
   }
 
+  // eslint-disable-next-line class-methods-use-this
   canWeShotHere(field, coordinates) {
     const targetLine = coordinates[0];
     const targetColumn = coordinates[1];
     if (
-      targetLine < 0 ||
-      targetLine > 9 ||
-      targetColumn < 0 ||
-      targetColumn > 9
-    )
-      return false;
+      targetLine < 0
+      || targetLine > 9
+      || targetColumn < 0
+      || targetColumn > 9
+    ) return false;
     if (['', 's'].includes(field[targetLine][targetColumn])) {
       return true;
-    } else {
-      return false;
     }
+    return false;
   }
 
   randomTarget(field) {
@@ -96,16 +94,19 @@ class Player {
         if (this.canWeShotHere(field, target)) return target;
       }
     }
+    return null;
   }
 
   generateTarget(field) {
+    let target = null;
     if (this.successShots.length === 0) {
-      return randomTarget(field);
+      target = this.randomTarget(field);
     } else if (this.successShots.length === 1) {
-      return generateTargetWith1Point(field, this.successShots);
+      target = this.generateTargetWith1Point(field, this.successShots);
     } else if (this.successShots.length > 1) {
-      return generateTargetWith2Point(field, this.successShots);
+      target = this.generateTargetWith2Point(field, this.successShots);
     }
+    return target;
   }
 }
 
