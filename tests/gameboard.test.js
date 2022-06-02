@@ -1,5 +1,5 @@
 /* eslint-disable no-undef */
-import Gameboard from '../src/gameboardClass';
+import Gameboard from '../src/gameboard';
 
 const myGameboard = new Gameboard();
 

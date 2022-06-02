@@ -1,5 +1,5 @@
 /* eslint-disable no-undef */
-import Ship from '../src/shipClass';
+import Ship from '../src/ship';
 
 const ship1 = new Ship([[0, 0], [0, 1], [0, 2], [0, 3]]);
 
