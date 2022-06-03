@@ -98,12 +98,12 @@ class Gameboard {
     return shipAdded;
   }
 
-  getGameOverStatus() {
-    let gameOVerStatus = true;
+  getgameOverStatus() {
+    let gameOverStatus = true;
     this.ships.forEach((ship) => {
-      if (!ship.isSunk()) gameOVerStatus = false;
+      if (!ship.isSunk()) gameOverStatus = false;
     });
-    return gameOVerStatus;
+    return gameOverStatus;
   }
 
   // return {'error', false} if you shot in 'm' or 'h'
@@ -121,27 +121,32 @@ class Gameboard {
     if (this.field[targetLine][targetColumn] === 's') {
       // hit the target
       this.field[targetLine][targetColumn] = 'h';
-      let shipIsSunk;
-      this.ships.forEach((ship) => {
-        const thereIsAHit = ship.hit(targetCellCoordinates);
-        if (thereIsAHit) shipIsSunk = ship.isSunk();
-      });
+      const ship = this.findShip([targetLine, targetColumn]);
+      console.log(ship);
+      setTimeout(ship.hit, 500, [targetLine, targetColumn]);
+      // ship.hit([targetLine, targetColumn]);
+      const shipIsSunk = ship.isSunk();
+      // let shipIsSunk;
+      // this.ships.forEach((ship) => {
+      //   const thereIsAHit = ship.hit(targetCellCoordinates);
+      //   if (thereIsAHit) shipIsSunk = ship.isSunk();
+      // });
       resultOfAttack.hitStatus = true;
       resultOfAttack.shipWasSunk = shipIsSunk;
-      resultOfAttack.gameOverStatus = this.getGameOverStatus();
+      resultOfAttack.gameOverStatus = this.getgameOverStatus();
       resultOfAttack.field = this.field;
     } else if (this.field[targetLine][targetColumn] === '') {
       // missed the target
       this.field[targetLine][targetColumn] = 'm';
       resultOfAttack.hitStatus = false;
       resultOfAttack.shipWasSunk = false;
-      resultOfAttack.gameOverStatus = this.getGameOverStatus();
+      resultOfAttack.gameOverStatus = this.getgameOverStatus();
       resultOfAttack.field = this.field;
     } else if (['h', 'm'].includes(this.field[targetLine][targetColumn])) {
       // repeated shot at the same target
       resultOfAttack.hitStatus = 'error';
       resultOfAttack.shipWasSunk = false;
-      resultOfAttack.gameOverStatus = this.getGameOverStatus();
+      resultOfAttack.gameOverStatus = this.getgameOverStatus();
       resultOfAttack.field = this.field;
     } else {
       throw new Error('Invalid target!');
@@ -166,6 +171,24 @@ class Gameboard {
         counter += 1;
       }
     }
+  }
+
+  findShip(coordinates) {
+    console.log(coordinates);
+    const line = coordinates[0];
+    const column = coordinates[1];
+    let needShip = false;
+    this.ships.forEach((ship) => {
+      ship.cells.forEach((cell) => {
+        if (
+          cell.cellCoordinates[0] === line &&
+          cell.cellCoordinates[1] === column
+        ) {
+          needShip = ship;
+        }
+      });
+    });
+    return needShip;
   }
 }
 

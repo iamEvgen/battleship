@@ -1,9 +1,14 @@
 /* eslint-disable no-constant-condition */
 class Player {
-  constructor(mode, name) {
+  constructor(mode, name, turn) {
     this.name = name;
     this.mode = mode; // 'player'/'pc'
+    this.turn = turn;
     this.successShots = []; // add here success shots before sunk ex. [1, 2];
+  }
+
+  changeTurn() {
+    this.turn = !this.turn;
   }
 
   addSuccessShot(coordinates) {
