@@ -1,5 +1,4 @@
 import './style.css';
-import Ship from './ship';
 import Gameboard from './gameboard';
 import Player from './player';
 
@@ -13,24 +12,8 @@ import Player from './player';
     gameOver: false,
   };
 
-  let player1, player2, gameboard1, gameboard2;
-
-  function startNewGame() {
-    gameStatus.gameOver = false;
-    gameOverWarning.classList.add('hideGameOverWarning');
-
-    player1 = new Player('player', 'Seahero', true);
-    player2 = new Player('pc', 'AIinside', false);
-
-    gameboard1 = new Gameboard();
-    gameboard2 = new Gameboard();
-
-    gameboard1.generateShips();
-    gameboard2.generateShips();
-
-    renderPlayerField();
-    renderEnemyField();
-  }
+  let player1; let player2; let gameboard1; let
+    gameboard2;
 
   function renderPlayerField() {
     playerField.innerHTML = '';
@@ -70,7 +53,6 @@ import Player from './player';
         const newCell = document.createElement('div');
         newCell.classList.add('cell', `cellId-${line}-${column}`);
         const symbolInCell = gameboard2.field[line][column];
-        newCell.textContent = symbolInCell;
         if (symbolInCell === 'm') {
           newCell.textContent = '•';
         } else if (symbolInCell === 'h') {
@@ -89,6 +71,25 @@ import Player from './player';
     }
   }
 
+  function startNewGame() {
+    gameStatus.gameOver = false;
+    gameOverWarning.classList.add('hideGameOverWarning');
+    gameOverWarning.classList.remove('aliveShip');
+    gameOverWarning.classList.remove('sunkShip');
+
+    player1 = new Player('player', 'Seahero', true);
+    player2 = new Player('pc', 'AIinside', false);
+
+    gameboard1 = new Gameboard();
+    gameboard2 = new Gameboard();
+
+    gameboard1.generateShips();
+    gameboard2.generateShips();
+
+    renderPlayerField();
+    renderEnemyField();
+  }
+
   function changeTurns() {
     player1.changeTurn();
     player2.changeTurn();
@@ -105,24 +106,6 @@ import Player from './player';
     }
   }
 
-  function playerTurn(event) {
-    if (gameStatus.gameOver || event.target.classList[0] !== 'cell') {
-      return;
-    }
-    if (player1.turn) {
-      const [_, line, column] = event.target.classList[1].split('-');
-      const resultOfAttack = gameboard2.receiveAttack([+line, +column]);
-      renderEnemyField();
-      if (resultOfAttack.gameOverStatus) {
-        gameStatus.gameOver = resultOfAttack.gameOverStatus;
-        showGameOverMessage(false);
-      } else if (!resultOfAttack.hitStatus) {
-        changeTurns();
-        setTimeout(enemyTurn, 500);
-      }
-    }
-  }
-
   function enemyTurn() {
     if (gameStatus.gameOver) {
       return;
@@ -130,7 +113,6 @@ import Player from './player';
     if (player2.turn) {
       const target = player2.generateTarget(gameboard1.field);
       const resultOfAttack = gameboard1.receiveAttack(target);
-      console.log(resultOfAttack);
       renderPlayerField();
       if (resultOfAttack.gameOverStatus) {
         gameStatus.gameOver = resultOfAttack.gameOverStatus;
@@ -147,8 +129,28 @@ import Player from './player';
     }
   }
 
+  function playerTurn(event) {
+    if (gameStatus.gameOver || event.target.classList[0] !== 'cell') {
+      return;
+    }
+    if (player1.turn) {
+      const targetFromDOM = event.target.classList[1].split('-');
+      const line = targetFromDOM[1];
+      const column = targetFromDOM[2];
+      const resultOfAttack = gameboard2.receiveAttack([+line, +column]);
+      renderEnemyField();
+      if (resultOfAttack.gameOverStatus) {
+        gameStatus.gameOver = resultOfAttack.gameOverStatus;
+        showGameOverMessage(false);
+      } else if (!resultOfAttack.hitStatus) {
+        changeTurns();
+        setTimeout(enemyTurn, 500);
+      }
+    }
+  }
+
   startNewGame();
 
   newGameBtn.addEventListener('click', startNewGame);
   enemyField.addEventListener('click', playerTurn);
-})();
+}());

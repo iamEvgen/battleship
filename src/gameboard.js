@@ -32,10 +32,10 @@ class Gameboard {
           const testLine = line + i;
           const testColumn = column + j;
           if (
-            testLine >= 0 &&
-            testLine <= 9 &&
-            testColumn >= 0 &&
-            testColumn <= 9
+            testLine >= 0
+            && testLine <= 9
+            && testColumn >= 0
+            && testColumn <= 9
           ) {
             if (this.field[testLine][testColumn] !== '') {
               nearCellsAreFree = false;
@@ -77,8 +77,8 @@ class Gameboard {
         ]);
       }
     } else if (
-      axis === 'vertical' &&
-      firstCellCoordinates.line + length <= 10
+      axis === 'vertical'
+      && firstCellCoordinates.line + length <= 10
     ) {
       for (let i = 1; i < length; i += 1) {
         allShipCoordinates.push([
@@ -96,6 +96,54 @@ class Gameboard {
     }
 
     return shipAdded;
+  }
+
+  static includes(arr, element) {
+    let result = false;
+    arr.forEach((el) => {
+      if (el[0] === element[0] && el[1] === element[1]) {
+        result = true;
+      }
+    });
+    return result;
+  }
+
+  closeCellsForAttack(ship) {
+    const shipCellCoordinates = [];
+    const needToClose = new Set();
+    ship.cells.forEach((cell) => {
+      shipCellCoordinates.push(cell.cellCoordinates);
+    });
+
+    const shifts = [
+      [-1, -1],
+      [-1, 0],
+      [-1, 1],
+      [0, -1],
+      [0, 1],
+      [1, -1],
+      [1, 0],
+      [1, 1],
+    ];
+
+    shipCellCoordinates.forEach((cell) => {
+      shifts.forEach((shift) => {
+        const closingCell = [cell[0] + shift[0], cell[1] + shift[1]];
+        if (
+          closingCell[0] >= 0
+          && closingCell[0] <= 9
+          && closingCell[1] >= 0
+          && closingCell[1] <= 9
+          && !Gameboard.includes(shipCellCoordinates, closingCell)
+        ) {
+          needToClose.add(closingCell);
+        }
+      });
+    });
+
+    needToClose.forEach((cell) => {
+      this.field[cell[0]][cell[1]] = 'm';
+    });
   }
 
   getgameOverStatus() {
@@ -124,6 +172,9 @@ class Gameboard {
       const shipUnderFire = this.findShip([targetLine, targetColumn]);
       shipUnderFire.hit([targetLine, targetColumn]);
       const shipIsSunk = shipUnderFire.isSunk();
+      if (shipIsSunk) {
+        this.closeCellsForAttack(shipUnderFire);
+      }
       resultOfAttack.hitStatus = true;
       resultOfAttack.shipWasSunk = shipIsSunk;
       resultOfAttack.gameOverStatus = this.getgameOverStatus();
@@ -149,7 +200,7 @@ class Gameboard {
   }
 
   generateShips() {
-    for (let shipLength of [4, 3, 3, 2, 2, 2, 1, 1, 1, 1]) {
+    [4, 3, 3, 2, 2, 2, 1, 1, 1, 1].forEach((shipLength) => {
       let counter = 1;
       while (counter < 1000) {
         const firstCell = [
@@ -163,7 +214,7 @@ class Gameboard {
         }
         counter += 1;
       }
-    }
+    });
   }
 
   findShip(coordinates) {
@@ -173,8 +224,8 @@ class Gameboard {
     this.ships.forEach((ship) => {
       ship.cells.forEach((cell) => {
         if (
-          cell.cellCoordinates[0] === line &&
-          cell.cellCoordinates[1] === column
+          cell.cellCoordinates[0] === line
+          && cell.cellCoordinates[1] === column
         ) {
           needShip = ship;
         }

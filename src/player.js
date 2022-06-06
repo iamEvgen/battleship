@@ -64,8 +64,6 @@ class Player {
         return newCoordinates;
       }
     }
-    this.clearShotsWhenEnemySunk();
-    return this.randomTarget();
   }
 
   generateTargetWith2Point(field, shots) {
@@ -106,7 +104,6 @@ class Player {
 
   generateTarget(field) {
     let target;
-    console.log(this.successShots);
     if (this.successShots.length === 0) {
       target = this.randomTarget(field);
     } else if (this.successShots.length === 1) {
