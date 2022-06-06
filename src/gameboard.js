@@ -121,16 +121,10 @@ class Gameboard {
     if (this.field[targetLine][targetColumn] === 's') {
       // hit the target
       this.field[targetLine][targetColumn] = 'h';
-      const ship = this.findShip([targetLine, targetColumn]);
-      console.log(ship);
-      setTimeout(ship.hit, 500, [targetLine, targetColumn]);
-      // ship.hit([targetLine, targetColumn]);
-      const shipIsSunk = ship.isSunk();
-      // let shipIsSunk;
-      // this.ships.forEach((ship) => {
-      //   const thereIsAHit = ship.hit(targetCellCoordinates);
-      //   if (thereIsAHit) shipIsSunk = ship.isSunk();
-      // });
+      const shipUnderFire = this.findShip([targetLine, targetColumn]);
+      console.log(shipUnderFire);
+      shipUnderFire.hit([targetLine, targetColumn]);
+      const shipIsSunk = shipUnderFire.isSunk();
       resultOfAttack.hitStatus = true;
       resultOfAttack.shipWasSunk = shipIsSunk;
       resultOfAttack.gameOverStatus = this.getgameOverStatus();
@@ -174,7 +168,6 @@ class Gameboard {
   }
 
   findShip(coordinates) {
-    console.log(coordinates);
     const line = coordinates[0];
     const column = coordinates[1];
     let needShip = false;
@@ -188,6 +181,7 @@ class Gameboard {
         }
       });
     });
+
     return needShip;
   }
 }

@@ -103,7 +103,7 @@ class Player {
   }
 
   generateTarget(field) {
-    let target = null;
+    let target;
     if (this.successShots.length === 0) {
       target = this.randomTarget(field);
     } else if (this.successShots.length === 1) {

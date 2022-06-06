@@ -20,7 +20,6 @@ class Ship {
         thereIsAHit = true;
       }
     });
-    console.log(this);
     return thereIsAHit;
   }
 
