@@ -44,7 +44,7 @@ import Player from './player';
     }
   }
 
-  function renderEnemyField() {
+  function renderEnemyField(playerLost) {
     enemyField.innerHTML = '';
     for (let line = 0; line < 10; line += 1) {
       const newLine = document.createElement('div');
@@ -64,6 +64,8 @@ import Player from './player';
           } else {
             newCell.classList.add('aliveShip');
           }
+        } else if (playerLost && symbolInCell === 's') {
+          newCell.classList.add('aliveShip');
         }
         newLine.appendChild(newCell);
       }
@@ -100,6 +102,7 @@ import Player from './player';
     if (youLose) {
       gameOverWarning.textContent = 'You lose!';
       gameOverWarning.classList.add('sunkShip');
+      renderEnemyField(true);
     } else {
       gameOverWarning.textContent = 'You won! Сongratulations!';
       gameOverWarning.classList.add('aliveShip');
