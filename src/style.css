@@ -99,3 +99,14 @@ h1 {
 .sunkShip {
   background-color: rgb(255, 191, 191);
 }
+
+.gameOverWarning {
+  text-align: center;
+  height: 25px;
+  line-height: 25px;
+  font-size: 0.9rem;
+}
+
+.hideGameOverWarning {
+  display: none;
+}

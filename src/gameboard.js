@@ -122,7 +122,6 @@ class Gameboard {
       // hit the target
       this.field[targetLine][targetColumn] = 'h';
       const shipUnderFire = this.findShip([targetLine, targetColumn]);
-      console.log(shipUnderFire);
       shipUnderFire.hit([targetLine, targetColumn]);
       const shipIsSunk = shipUnderFire.isSunk();
       resultOfAttack.hitStatus = true;

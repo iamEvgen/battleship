@@ -7,6 +7,7 @@ import Player from './player';
   const playerField = document.querySelector('.playerField');
   const enemyField = document.querySelector('.enemyField');
   const newGameBtn = document.querySelector('.newGame');
+  const gameOverWarning = document.querySelector('.gameOverWarning');
 
   const gameStatus = {
     gameOver: false,
@@ -16,6 +17,7 @@ import Player from './player';
 
   function startNewGame() {
     gameStatus.gameOver = false;
+    gameOverWarning.classList.add('hideGameOverWarning');
 
     player1 = new Player('player', 'Seahero', true);
     player2 = new Player('pc', 'AIinside', false);
@@ -68,10 +70,10 @@ import Player from './player';
         const newCell = document.createElement('div');
         newCell.classList.add('cell', `cellId-${line}-${column}`);
         const symbolInCell = gameboard2.field[line][column];
-        // newCell.textContent = symbolInCell;
+        newCell.textContent = symbolInCell;
         if (symbolInCell === 'm') {
           newCell.textContent = '•';
-        } else if (symbolInCell === 'h' ) {
+        } else if (symbolInCell === 'h') {
           newCell.textContent = 'x';
           const findShip = gameboard2.findShip([line, column]);
           const isShipSunk = findShip.isSunk();
@@ -87,54 +89,36 @@ import Player from './player';
     }
   }
 
-  // function renderEnemyField() {
-  //   enemyField.innerHTML = '';
-  //   for (let line = 0; line < 10; line += 1) {
-  //     const newLine = document.createElement('div');
-  //     newLine.classList.add('fieldLine');
-  //     for (let column = 0; column < 10; column += 1) {
-  //       const newCell = document.createElement('div');
-  //       newCell.classList.add('cell', `cellId-${line}-${column}`);
-  //       const symbolInCell = gameboard2.field[line][column];
-  //       newCell.textContent = symbolInCell;
-  //       if (symbolInCell === 'm') {
-  //         newCell.textContent = '•';
-  //       } else if (symbolInCell === 'h' ) {
-  //         newCell.textContent = 'x';
-  //         const findShip = gameboard1.findShip([line, column]);
-  //         const isShipSunk = findShip.isSunk();
-  //         if (isShipSunk) {
-  //           newCell.classList.add('sunkShip');
-  //         } else {
-  //           newCell.classList.add('aliveShip');
-  //         }
-  //       }
-  //       newLine.appendChild(newCell);
-  //     }
-  //     enemyField.appendChild(newLine);
-  //   }
-  // }
-
   function changeTurns() {
     player1.changeTurn();
     player2.changeTurn();
   }
 
+  function showGameOverMessage(youLose) {
+    gameOverWarning.classList.remove('hideGameOverWarning');
+    if (youLose) {
+      gameOverWarning.textContent = 'You lose!';
+      gameOverWarning.classList.add('sunkShip');
+    } else {
+      gameOverWarning.textContent = 'You won! Сongratulations!';
+      gameOverWarning.classList.add('aliveShip');
+    }
+  }
+
   function playerTurn(event) {
-    if (gameStatus.gameOver) {
+    if (gameStatus.gameOver || event.target.classList[0] !== 'cell') {
       return;
-    }  
+    }
     if (player1.turn) {
       const [_, line, column] = event.target.classList[1].split('-');
       const resultOfAttack = gameboard2.receiveAttack([+line, +column]);
-      console.log(resultOfAttack);
       renderEnemyField();
       if (resultOfAttack.gameOverStatus) {
         gameStatus.gameOver = resultOfAttack.gameOverStatus;
-        //render gameover result, who won the game?
+        showGameOverMessage(false);
       } else if (!resultOfAttack.hitStatus) {
         changeTurns();
-        enemyTurn();
+        setTimeout(enemyTurn, 500);
       }
     }
   }
@@ -146,14 +130,19 @@ import Player from './player';
     if (player2.turn) {
       const target = player2.generateTarget(gameboard1.field);
       const resultOfAttack = gameboard1.receiveAttack(target);
+      console.log(resultOfAttack);
       renderPlayerField();
       if (resultOfAttack.gameOverStatus) {
         gameStatus.gameOver = resultOfAttack.gameOverStatus;
-        //render gameover result, who won the game?
-      } else if (!resultOfAttack.hitStatus) {
-        changeTurns();
+        showGameOverMessage(true);
+      } else if (resultOfAttack.shipWasSunk) {
+        player2.clearShotsWhenEnemySunk();
+        setTimeout(enemyTurn, 750);
+      } else if (resultOfAttack.hitStatus) {
+        player2.addSuccessShot(target);
+        setTimeout(enemyTurn, 750);
       } else {
-        enemyTurn();
+        changeTurns();
       }
     }
   }
