@@ -81,6 +81,11 @@ h1 {
   background-color: #00a1c2;
   border: 1px solid #005f72;
   z-index: 5;
+  transition: all 0.25s;
+}
+
+.fieldSelector {
+  box-shadow: 0px 0px 5px 5px rgba(102, 0, 255, 0.5);
 }
 
 .enemyField:hover {

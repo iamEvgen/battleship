@@ -8,6 +8,8 @@ import Player from './player';
   const newGameBtn = document.querySelector('.newGame');
   const gameOverWarning = document.querySelector('.gameOverWarning');
 
+  enemyField.classList.add('fieldSelector');
+
   const gameStatus = {
     gameOver: false,
   };
@@ -92,9 +94,20 @@ import Player from './player';
     renderEnemyField();
   }
 
+  function selectField() {
+    if (player1.turn) {
+      enemyField.classList.add('fieldSelector');
+      playerField.classList.remove('fieldSelector');
+    } else if (player2.turn) {
+      playerField.classList.add('fieldSelector');
+      enemyField.classList.remove('fieldSelector');
+    }
+  }
+
   function changeTurns() {
     player1.changeTurn();
     player2.changeTurn();
+    selectField();
   }
 
   function showGameOverMessage(youLose) {
